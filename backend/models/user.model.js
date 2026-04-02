@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const userSchema = new mongoose.model({
+const userSchema = new mongoose.Schema({   // ✅ FIXED
     email:{
         type:String,
         required:true,
@@ -28,5 +28,4 @@ export const userSchema = new mongoose.model({
     verificationTokenExpiresAt:Date
 },{timestamps:true});
 
-
-export const User = mongoose.model("User",userSchema);
+export const User = mongoose.model("User", userSchema); // ✅ correct

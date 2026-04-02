@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 app.use("/api/auth",authRoutes);
 
 

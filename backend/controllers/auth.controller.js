@@ -11,6 +11,7 @@ export const signup = async (req,res) => {
     }
 
     const existingUser = await User.findOne({email});
+    console.log("User already exits",existingUser);
 
     if(existingUser){
         return res.status(400).json({sucess:false,message:"Existing User"});
@@ -32,15 +33,45 @@ export const signup = async (req,res) => {
     generateTokenAndSetCookie(res,user._id);
 
     res.status(201).json({
-        sucess:true,
-        message:"User created Sucessfully",
-        user:{
+        success: true,
+        message: "User created successfully",
+        user: {
             ...user._doc,
-            password:undefined,
-        },
+            password: undefined,
+        },  
     });
 
     } catch (error) {
         res.status(500).json({sucess:false , message:error.message});
     }
 };
+
+export const login = async(req,res) => {
+    const {email,password} = req.body;
+
+    if(!email || !password){
+        return res.status(400).json({message:"All the fields are required"});
+    };
+
+    const existingUser = await User.findOne({email});
+
+    if(!existingUser){
+        return res.status(400).json({sucess:false,message:"User does not exist"});
+    }
+
+    const correctPassword = bcrypt.compare(password,user.password);
+    const correctEmail = bcrypt.compare(email,user.email);
+
+
+    if(!correctPassword){
+        return res.status(400).json({message:"Invaild credintals"});
+    }
+    if(!correctEmail){
+        return res.status(400).json({message:"Invaild credintals"});
+    }
+
+    res.status(200).json({
+
+    })
+    
+}

@@ -2,12 +2,15 @@ import { User } from "../models/user.model.js";
 import { hash } from "bcryptjs";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+import { sendVerificationEmail } from "../mail/email.js";
+
+
 export const signup = async (req,res) => {
     try {
         const {name,email,password} = req.body;
 
     if( !name || !email || !password){
-        res.status(400).json({message:"All the feilds are required"});
+       return res.status(400).json({message:"All the feilds are required"});
     }
 
     const existingUser = await User.findOne({email});
@@ -31,6 +34,8 @@ export const signup = async (req,res) => {
     await user.save();
 
     generateTokenAndSetCookie(res,user._id);
+
+    await sendVerificationEmail(user.email,verificationToken);
 
     res.status(201).json({
         success: true,
